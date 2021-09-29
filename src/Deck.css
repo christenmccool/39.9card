@@ -1,0 +1,20 @@
+.Deck {
+  text-align: center;
+}
+
+.Deck-top {
+  text-align: center;
+  margin: 10px;
+}
+
+.Deck-btn {
+  background-color: darkgrey;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.Deck-main {
+  position: relative;
+  top: 40px;
+}
