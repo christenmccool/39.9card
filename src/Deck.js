@@ -36,7 +36,7 @@ const Deck = () => {
         alert(err);
       }
     }
-  
+
     if (auto && !intervalId.current) {
       intervalId.current = setInterval(async () => {
         await drawCard();
@@ -48,7 +48,7 @@ const Deck = () => {
       intervalId.current = null;
     };
   },
-  [auto, deck]);
+  [auto]);
 
   const start = () => {
     setAuto(!auto);
