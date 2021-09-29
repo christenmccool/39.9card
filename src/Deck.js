@@ -16,7 +16,7 @@ const Deck = () => {
   useEffect(() => {
     async function getDeck() {
       const res = await axios.get(`${BASE_URL}/new/shuffle/?deck_count=1`);
-      setDeck(res.data.deck_id);
+      setDeck(res.data);
     }
     getDeck();
   }, []);
@@ -24,8 +24,9 @@ const Deck = () => {
   useEffect(() => {
     async function drawCard() {
       try {
-        const res = await axios.get(`${BASE_URL}/${deck}/draw/?count=1`);
-        if (res.data.remaining === 0 && res.data.success === false) {
+        const res = await axios.get(`${BASE_URL}/${deck.deck_id}/draw/?count=1`);
+        setDeck({...deck, remaining: res.data.remaining});
+        if (res.data.remaining === 0) {
           setAuto(false);
           throw new Error( "No cards remaining!")
         }
@@ -59,6 +60,15 @@ const Deck = () => {
     )
   }
 
+  const newDeck = () => {
+    async function getDeck() {
+      const res = await axios.get(`${BASE_URL}/new/shuffle/?deck_count=1`);
+      setDeck(res.data);
+    }
+    getDeck();
+    setCards([]);
+  }
+
   const getAngle = () => (Math.floor(Math.random() * 90) - 45);
 
   return (
@@ -73,6 +83,7 @@ const Deck = () => {
       <div className="Deck-main">
         {renderCards()}
       </div>
+      {deck && deck.remaining === 0 ? <button className="Deck-btn" onClick={newDeck}>New deck</button> : null}
     </div>
   )
 }
