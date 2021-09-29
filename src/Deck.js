@@ -18,7 +18,7 @@ const Deck = () => {
       const res = await axios.get(`${BASE_URL}/new/shuffle/?deck_count=1`);
       setDeck(res.data);
     }
-    console.log("running first use effect");
+    console.log("first effect");
     getDeck();
   }, []);
 
@@ -26,7 +26,8 @@ const Deck = () => {
     async function drawCard() {
       try {
         const res = await axios.get(`${BASE_URL}/${deck.deck_id}/draw/?count=1`);
-        setDeck({...deck, remaining: res.data.remaining});
+        setDeck(deck => ({...deck, remaining: res.data.remaining}));
+        // setDeck({...deck, remaining: res.data.remaining});
         if (res.data.remaining === 0) {
           setAuto(false);
           throw new Error( "No cards remaining!")
@@ -47,12 +48,12 @@ const Deck = () => {
       }
     }
 
-    console.log("running second use effect");
     if (auto && !intervalId.current) {
       intervalId.current = setInterval(async () => {
         await drawCard();
       }, 200);
     } 
+    console.log("second effect");
 
     return () => {
       clearInterval(intervalId.current);
