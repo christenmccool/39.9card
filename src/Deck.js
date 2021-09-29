@@ -18,6 +18,7 @@ const Deck = () => {
       const res = await axios.get(`${BASE_URL}/new/shuffle/?deck_count=1`);
       setDeck(res.data);
     }
+    console.log("running first use effect");
     getDeck();
   }, []);
 
@@ -31,12 +32,22 @@ const Deck = () => {
           throw new Error( "No cards remaining!")
         }
         const card = res.data.cards[0];
-        setCards(cards => [...cards, {image: card.image, code: card.code, angle: getAngle(), id: uuid()}]);
+        setCards(cards => (
+          [...cards, 
+            {image: card.image, 
+              code: card.code, 
+              angle: getAngle(), 
+              transX: getTransX(), 
+              transY: getTransY(), 
+              id: uuid()}
+          ]
+        ));
       } catch (err) {
         alert(err);
       }
     }
 
+    console.log("running second use effect");
     if (auto && !intervalId.current) {
       intervalId.current = setInterval(async () => {
         await drawCard();
@@ -56,7 +67,16 @@ const Deck = () => {
 
   const renderCards = () => {
     return (
-      cards.map(card => <Card image={card.image} code={card.code} angle={card.angle} key={card.id} />)
+      cards.map(card => 
+        <Card 
+          image={card.image} 
+          code={card.code} 
+          angle={card.angle} 
+          transX={card.transX} 
+          transY={card.transY} 
+          key={card.id} 
+        />
+      )
     )
   }
 
@@ -70,6 +90,9 @@ const Deck = () => {
   }
 
   const getAngle = () => (Math.floor(Math.random() * 90) - 45);
+  const getTransX = () => (Math.floor(Math.random() * 40) - 20);
+  const getTransY = () => (Math.floor(Math.random() * 40) - 20);
+
 
   return (
     <div className="Deck">
